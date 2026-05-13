@@ -3,48 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>E-Tugas Universal + Firebase</title>
+    <title>E-Tugas Universal Cloud</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
-        :root { 
-            --primary: #25D366; --dark: #075E54; --bg: #ece5dd; --card: #ffffff; --text: #333; --border: #e0e0e0;
-        }
-        [data-theme="dark"] {
-            --primary: #25D366; --dark: #128C7E; --bg: #111b21; --card: #202c33; --text: #e9edef; --border: #374045;
-        }
+        :root { --primary: #25D366; --dark: #075E54; --bg: #ece5dd; --card: #ffffff; --text: #333; --border: #e0e0e0; }
+        [data-theme="dark"] { --primary: #25D366; --dark: #128C7E; --bg: #111b21; --card: #202c33; --text: #e9edef; --border: #374045; }
 
-        body { 
-            font-family: 'Poppins', sans-serif; background: var(--bg); color: var(--text);
-            margin: 0; padding: 20px; transition: 0.3s; min-height: 100vh;
-            display: flex; justify-content: center; align-items: center;
-        }
-
+        body { font-family: 'Poppins', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 20px; transition: 0.3s; min-height: 100vh; display: flex; justify-content: center; align-items: center; }
         .admin-controls { position: fixed; top: 20px; right: 20px; display: flex; gap: 10px; z-index: 100; }
         .icon-btn { background: var(--card); border: 1px solid var(--border); padding: 10px; border-radius: 50%; cursor: pointer; font-size: 1.2em; box-shadow: 0 2px 5px rgba(0,0,0,0.1); width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; }
-
-        .container { width: 100%; max-width: 450px; background: var(--card); padding: 30px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); position: relative; }
-        
+        .container { width: 100%; max-width: 450px; background: var(--card); padding: 30px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
         h2 { color: var(--primary); text-align: center; font-weight: 600; margin-bottom: 25px; }
         label { display: block; margin-top: 15px; font-weight: 600; font-size: 0.85em; }
-        
-        input, textarea { 
-            width: 100%; padding: 14px; margin-top: 8px; border: 1px solid var(--border); 
-            border-radius: 12px; box-sizing: border-box; font-family: 'Poppins'; background: var(--bg); color: var(--text);
-        }
-
-        .main-btn { 
-            width: 100%; padding: 16px; background: var(--primary); color: white; border: none; 
-            border-radius: 12px; margin-top: 25px; font-size: 1em; cursor: pointer; font-weight: 600; transition: 0.3s;
-        }
-        .main-btn:disabled { background: #ccc; cursor: not-allowed; }
-
-        /* Loading Bar */
+        input, textarea { width: 100%; padding: 14px; margin-top: 8px; border: 1px solid var(--border); border-radius: 12px; box-sizing: border-box; font-family: 'Poppins'; background: var(--bg); color: var(--text); }
+        .main-btn { width: 100%; padding: 16px; background: var(--primary); color: white; border: none; border-radius: 12px; margin-top: 25px; font-size: 1em; cursor: pointer; font-weight: 600; transition: 0.3s; }
         .progress-container { display: none; width: 100%; background: var(--border); height: 6px; border-radius: 10px; margin-top: 20px; overflow: hidden; }
         .progress-bar { width: 0%; height: 100%; background: var(--primary); transition: width 0.4s; }
-
         .field-manager { border: 1px solid var(--border); padding: 10px; border-radius: 10px; margin-bottom: 10px; display: flex; gap: 5px; }
-        .field-manager input { margin-top: 0; }
-        .empty-state { text-align: center; color: #888; padding: 20px; }
         .section { display: none; }
         .active { display: block; }
     </style>
@@ -52,7 +27,6 @@
 <body data-theme="light">
 
 <div class="admin-controls">
-    <!-- Icon berubah sesuai mode -->
     <button class="icon-btn" id="theme-icon" onclick="toggleTheme()">🌙</button>
     <button class="icon-btn" onclick="toggleAdmin()">⚙️</button>
 </div>
@@ -60,7 +34,7 @@
 <div class="container">
     <div id="anggota-view" class="section active">
         <h2>Kirim Tugas</h2>
-        <div id="dynamic-form"></div>
+        <div id="dynamic-form"><p style="text-align:center; color:#888;">Mengambil data dari cloud...</p></div>
         <div class="progress-container" id="p-container"><div class="progress-bar" id="p-bar"></div></div>
         <button class="main-btn" id="btn-kirim" onclick="prosesKirim()">Kirim Sekarang</button>
     </div>
@@ -68,158 +42,149 @@
     <div id="admin-view" class="section">
         <div id="loginAdmin">
             <h2>Login Admin</h2>
-            <input type="password" id="passInput" placeholder="Password Admin">
+            <input type="password" id="passInput" placeholder="Sandi: 2025">
             <button class="main-btn" onclick="checkAdmin()">Masuk</button>
         </div>
-
         <div id="panelAdmin" style="display:none">
-            <h3>Setting Form</h3>
+            <h3>Cloud Settings</h3>
             <label>Nomor WA Admin</label>
             <input type="number" id="noAdmin" placeholder="628xxx">
-            <label>Tambah Kolom Pertanyaan</label>
+            <label>Atur Form Mahasiswa</label>
             <div id="field-list" style="margin-top:10px"></div>
-            <button onclick="addField()" style="background:none; border:1px solid var(--primary); color:var(--primary); padding:5px 10px; border-radius:5px; cursor:pointer; font-size:0.8em">+ Tambah Kolom</button>
-            <button class="main-btn" onclick="saveAdminSettings()">Simpan Semua</button>
-            <button onclick="closeAdmin()" style="width:100%; background:none; border:none; color:#888; margin-top:10px; cursor:pointer">Keluar</button>
+            <button onclick="addField()" style="background:none; border:1px solid var(--primary); color:var(--primary); padding:5px 10px; border-radius:5px; cursor:pointer;">+ Tambah Kolom</button>
+            <button class="main-btn" onclick="saveAdminToFirebase()">Simpan ke Cloud</button>
+            <button onclick="location.reload()" style="width:100%; background:none; border:none; color:#888; margin-top:10px; cursor:pointer">Kembali</button>
         </div>
     </div>
 </div>
 
-<!-- Firebase SDK & App Logic -->
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics.js";
+    import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-    // Konfigurasi Firebase Anda
     const firebaseConfig = {
-      apiKey: "AIzaSyC3KMEF6IBUxBVZOmhuJrVYheQTBHubSFA",
-      authDomain: "kumpultugas-32cac.firebaseapp.com",
-      databaseURL: "https://kumpultugas-32cac-default-rtdb.asia-southeast1.firebasedatabase.app",
-      projectId: "kumpultugas-32cac",
-      storageBucket: "kumpultugas-32cac.firebasestorage.app",
-      messagingSenderId: "616466117503",
-      appId: "1:616466117503:web:6ac374452f9cd3c935604a",
-      measurementId: "G-3ELW53XSB5"
+        apiKey: "AIzaSyC3KMEF6IBUxBVZOmhuJrVYheQTBHubSFA",
+        authDomain: "kumpultugas-32cac.firebaseapp.com",
+        databaseURL: "https://kumpultugas-32cac-default-rtdb.asia-southeast1.firebasedatabase.app",
+        projectId: "kumpultugas-32cac",
+        storageBucket: "kumpultugas-32cac.firebasestorage.app",
+        messagingSenderId: "616466117503",
+        appId: "1:616466117503:web:6ac374452f9cd3c935604a",
+        measurementId: "G-3ELW53XSB5"
     };
 
     const app = initializeApp(firebaseConfig);
-    const analytics = getAnalytics(app);
+    const db = getDatabase(app);
+    const dbRef = ref(db, 'appConfig');
 
-    // --- GLOBAL VARIABLES & FUNCTIONS ---
     const PWD = "2025";
-    let fields = JSON.parse(localStorage.getItem('formFields')) || [];
+    let cloudFields = [];
+    let cloudWA = "";
+
+    // Sinkronisasi Real-time
+    onValue(dbRef, (snapshot) => {
+        const data = snapshot.val();
+        if (data) {
+            cloudFields = data.fields || [];
+            cloudWA = data.waAdmin || "";
+            renderForm(cloudFields);
+        }
+    });
 
     window.toggleTheme = function() {
         const body = document.body;
         const icon = document.getElementById('theme-icon');
-        const current = body.getAttribute('data-theme');
-        if (current === 'light') {
-            body.setAttribute('data-theme', 'dark');
-            icon.innerText = "☀️"; // Jadi matahari saat gelap
-        } else {
-            body.setAttribute('data-theme', 'light');
-            icon.innerText = "🌙"; // Jadi bulan saat terang
-        }
+        const isLight = body.getAttribute('data-theme') === 'light';
+        body.setAttribute('data-theme', isLight ? 'dark' : 'light');
+        icon.innerText = isLight ? "☀️" : "🌙";
     }
 
-    window.renderForm = function() {
+    function renderForm(fields) {
         const container = document.getElementById('dynamic-form');
         if (fields.length === 0) {
-            container.innerHTML = '<div class="empty-state">Belum ada kolom tugas. Hubungi admin.</div>';
-            document.getElementById('btn-kirim').style.display = 'none';
+            container.innerHTML = '<p class="empty-state">Admin belum mengatur form.</p>';
             return;
         }
-        document.getElementById('btn-kirim').style.display = 'block';
         container.innerHTML = fields.map((f, i) => `
             <label>${f}</label>
-            <textarea id="field-${i}" placeholder="Isi di sini..." required></textarea>
+            <textarea id="field-${i}" placeholder="Tulis jawaban..." required></textarea>
         `).join('');
     }
 
     window.toggleAdmin = function() {
-        document.getElementById('anggota-view').classList.remove('active');
+        document.getElementById('anggota-view').style.display = 'none';
         document.getElementById('admin-view').classList.add('active');
+        document.getElementById('admin-view').style.display = 'block';
     }
 
     window.checkAdmin = function() {
         if(document.getElementById('passInput').value === PWD) {
             document.getElementById('loginAdmin').style.display = 'none';
             document.getElementById('panelAdmin').style.display = 'block';
-            document.getElementById('noAdmin').value = localStorage.getItem('waAdmin') || "";
+            document.getElementById('noAdmin').value = cloudWA;
             renderAdminFields();
-        } else { alert("Sandi salah!"); }
+        } else { alert("Sandi 2025 salah!"); }
     }
 
     window.addField = function() {
-        fields.push("Pertanyaan Baru");
+        cloudFields.push("Pertanyaan Baru");
         renderAdminFields();
     }
 
-    window.removeField = function(index) {
-        fields.splice(index, 1);
+    window.removeField = function(i) {
+        cloudFields.splice(i, 1);
         renderAdminFields();
     }
 
-    window.renderAdminFields = function() {
+    function renderAdminFields() {
         const list = document.getElementById('field-list');
-        list.innerHTML = fields.map((f, i) => `
+        list.innerHTML = cloudFields.map((f, i) => `
             <div class="field-manager">
-                <input type="text" value="${f}" onchange="window.updateFieldName(${i}, this.value)">
+                <input type="text" value="${f}" onchange="updateFieldName(${i}, this.value)">
                 <button onclick="removeField(${i})" style="color:red; background:none; border:none; cursor:pointer">✖</button>
             </div>
         `).join('');
     }
 
-    window.updateFieldName = function(i, val) { fields[i] = val; }
+    window.updateFieldName = function(i, val) { cloudFields[i] = val; }
 
-    window.saveAdminSettings = function() {
-        localStorage.setItem('waAdmin', document.getElementById('noAdmin').value);
-        localStorage.setItem('formFields', JSON.stringify(fields));
-        alert("Pengaturan Berhasil!");
-        location.reload();
+    window.saveAdminToFirebase = function() {
+        const wa = document.getElementById('noAdmin').value;
+        set(dbRef, {
+            waAdmin: wa,
+            fields: cloudFields
+        }).then(() => {
+            alert("Data tersimpan di Cloud!");
+            location.reload();
+        }).catch((e) => alert("Gagal simpan: " + e.message));
     }
-
-    window.closeAdmin = function() { location.reload(); }
 
     window.prosesKirim = function() {
-        const btn = document.getElementById('btn-kirim');
-        const pCont = document.getElementById('p-container');
-        const pBar = document.getElementById('p-bar');
-        const no = localStorage.getItem('waAdmin');
-
-        if(!no) return alert("Nomor Admin belum diatur!");
-
-        let dataInput = [];
-        for(let i=0; i<fields.length; i++) {
+        if(!cloudWA) return alert("Admin belum setting nomor!");
+        
+        let teksPesan = `*PENGUMPULAN TUGAS*%0A%0A`;
+        for(let i=0; i<cloudFields.length; i++) {
             let val = document.getElementById(`field-${i}`).value;
-            if(!val) return alert("Mohon isi semua kolom!");
-            dataInput.push(`*${fields[i]}:*%0A${val}%0A`);
+            if(!val) return alert("Isi semua kolom!");
+            teksPesan += `*${cloudFields[i]}:*%0A${val}%0A%0A`;
         }
 
+        const btn = document.getElementById('btn-kirim');
         btn.disabled = true;
-        btn.innerText = "Memproses...";
-        pCont.style.display = 'block';
-        
+        document.getElementById('p-container').style.display = 'block';
         let w = 0;
-        let interval = setInterval(() => {
-            w += 20;
-            pBar.style.width = w + '%';
+        let itv = setInterval(() => {
+            w += 25;
+            document.getElementById('p-bar').style.width = w + '%';
             if(w >= 100) {
-                clearInterval(interval);
-                const pesan = `*PENGUMPULAN TUGAS*%0A%0A${dataInput.join('%0A')}`;
-                window.open(`https://wa.me/${no}?text=${pesan}`, '_blank');
-                setTimeout(() => {
-                    btn.disabled = false;
-                    btn.innerText = "Kirim Sekarang";
-                    pCont.style.display = 'none';
-                    pBar.style.width = '0%';
-                }, 1000);
+                clearInterval(itv);
+                window.open(`https://wa.me/${cloudWA}?text=${teksPesan}`, '_blank');
+                btn.disabled = false;
+                document.getElementById('p-container').style.display = 'none';
+                document.getElementById('p-bar').style.width = '0%';
             }
-        }, 200);
+        }, 250);
     }
-
-    renderForm();
 </script>
-
 </body>
 </html>
